@@ -1,0 +1,9 @@
+{
+	"name": "khojaADF0",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "a7840bdd-6194-4a99-a535-d2183a4792a5",
+		"tenantId": "51659654-3d3f-4bbb-86e5-4266a8fe85ef"
+	}
+}
