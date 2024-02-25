@@ -562,6 +562,9 @@
 						"type": "string"
 					}
 				},
+				"folder": {
+					"name": "SalesData_archife_transform"
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
@@ -636,6 +639,40 @@
 						"type": "String"
 					}
 				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_storage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_archive_delete_temp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_storage",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"zipName": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "SalesData_archife_transform"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@dataset().zipName",
+							"type": "Expression"
+						},
+						"fileSystem": "descontainer"
+					}
+				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_storage')]"
@@ -1338,6 +1375,50 @@
 								}
 							]
 						}
+					},
+					{
+						"name": "Delete1",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "ForEach1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "DS_archive_delete_temp",
+								"type": "DatasetReference",
+								"parameters": {
+									"zipName": {
+										"value": "@variables('zipName')",
+										"type": "Expression"
+									}
+								}
+							},
+							"logStorageSettings": {
+								"linkedServiceName": {
+									"referenceName": "LS_storage",
+									"type": "LinkedServiceReference"
+								}
+							},
+							"enableLogging": true,
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
 					}
 				],
 				"policy": {
@@ -1362,6 +1443,8 @@
 				"[concat(variables('factoryId'), '/datasets/DS_archive_name')]",
 				"[concat(variables('factoryId'), '/datasets/DS_sales_archive_copy')]",
 				"[concat(variables('factoryId'), '/datasets/DS_archive_locate_temp')]",
+				"[concat(variables('factoryId'), '/datasets/DS_archive_delete_temp')]",
+				"[concat(variables('factoryId'), '/linkedServices/LS_storage')]",
 				"[concat(variables('factoryId'), '/datasets/DS_archive_from_temp')]",
 				"[concat(variables('factoryId'), '/datasets/DS_archive_final_destination')]"
 			]
