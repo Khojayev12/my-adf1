@@ -1,0 +1,26 @@
+{
+	"name": "DS_archive_delete_temp",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_storage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"zipName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@dataset().zipName",
+					"type": "Expression"
+				},
+				"fileSystem": "descontainer"
+			}
+		}
+	}
+}
