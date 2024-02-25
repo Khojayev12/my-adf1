@@ -57,7 +57,7 @@
 				}
 			},
 			{
-				"name": "Copy data1",
+				"name": "Copy data to temp",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -129,11 +129,82 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Copy data to temp",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('fileNames')",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Copy data to destination",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "DS_archive_from_temp",
+									"type": "DatasetReference",
+									"parameters": {
+										"fileName": {
+											"value": "@variables('zipName')",
+											"type": "Expression"
+										},
+										"csvName": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
 			}
 		],
 		"variables": {
 			"zipName": {
 				"type": "String"
+			},
+			"fileNames": {
+				"type": "Array",
+				"defaultValue": [
+					"['customers, 'orders', 'products']"
+				]
 			}
 		},
 		"annotations": []

@@ -5,6 +5,9 @@
 			"referenceName": "LS_storage",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "SalesData_archife_transform"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
