@@ -10,6 +10,9 @@
 				"type": "string"
 			}
 		},
+		"folder": {
+			"name": "SalesData_archife_transform"
+		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
