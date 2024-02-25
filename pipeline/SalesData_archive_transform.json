@@ -173,7 +173,26 @@
 										"type": "DelimitedTextReadSettings"
 									}
 								},
-								"enableStaging": false
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
 							},
 							"inputs": [
 								{
@@ -186,6 +205,22 @@
 										},
 										"csvName": {
 											"value": "@item()",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_archive_final_destination",
+									"type": "DatasetReference",
+									"parameters": {
+										"csvFilneName": {
+											"value": "@item()",
+											"type": "Expression"
+										},
+										"zipName": {
+											"value": "@variables('zipName')",
 											"type": "Expression"
 										}
 									}
@@ -203,7 +238,9 @@
 			"fileNames": {
 				"type": "Array",
 				"defaultValue": [
-					"['customers, 'orders', 'products']"
+					"customers",
+					"orders",
+					"products"
 				]
 			}
 		},
